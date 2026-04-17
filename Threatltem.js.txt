@@ -1,0 +1,30 @@
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+
+export default function ThreatItem({ url, status }) {
+  return (
+    <View style={styles.card}>
+      <Text style={styles.url}>{url}</Text>
+      <Text style={status === 'Safe' ? styles.safe : styles.danger}>
+        {status}
+      </Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: '#1e1e1e',
+    padding: 10,
+    marginVertical: 5
+  },
+  url: {
+    color: '#fff'
+  },
+  safe: {
+    color: 'green'
+  },
+  danger: {
+    color: 'red'
+  }
+});

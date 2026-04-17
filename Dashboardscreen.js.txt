@@ -1,0 +1,82 @@
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  FlatList,
+  StyleSheet,
+  Alert
+} from 'react-native';
+
+import ThreatItem from '../components/ThreatItem';
+
+export default function DashboardScreen() {
+  const [url, setUrl] = useState('');
+  const [data, setData] = useState([]);
+
+  const checkPhishing = (url) => {
+    if (url.includes('@') || url.includes('http://') || url.length > 30) {
+      return 'Phishing';
+    }
+    return 'Safe';
+  };
+
+  const handleCheck = () => {
+    const result = checkPhishing(url);
+
+    setData([
+      ...data,
+      { id: Date.now().toString(), url, status: result }
+    ]);
+
+    if (result === 'Phishing') {
+      Alert.alert('⚠️ Warning', 'Potential phishing detected!');
+    }
+
+    setUrl('');
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Dashboard</Text>
+
+      <TextInput
+        placeholder="Enter URL"
+        placeholderTextColor="#aaa"
+        style={styles.input}
+        value={url}
+        onChangeText={setUrl}
+      />
+
+      <Button title="Check URL" onPress={handleCheck} />
+
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <ThreatItem url={item.url} status={item.status} />
+        )}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#121212'
+  },
+  title: {
+    color: '#fff',
+    fontSize: 24,
+    marginBottom: 10
+  },
+  input: {
+    backgroundColor: '#1e1e1e',
+    color: '#fff',
+    padding: 10,
+    marginBottom: 10
+  }
+});
